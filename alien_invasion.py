@@ -4,6 +4,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
+from bullet import Bullet
 
 class AlienInvasion():
     """管理游戏资源和行为的类"""
@@ -29,6 +30,9 @@ class AlienInvasion():
         # 此处的 self 表示将 AlienInvasion 实例传入 Ship 中，
         # 让 Ship 能够访问 AlienInvasion 类的资源，如 self.screen
         self.ship = Ship(self)
+        
+        # 创建一个存储子弹的编组
+        self.bullets = pygame.sprite.Group()
 
     def run_game(self):
         """开始游戏的主循环"""
@@ -37,6 +41,7 @@ class AlienInvasion():
             # 原先的监听事件功能、绘制屏幕功能均抽象为一个单独的方法，此处直接调用
             self._check_events()
             self.ship.update()
+            self._update_bullets()
             self._update_screen()
 
     def _check_events(self):
@@ -57,8 +62,10 @@ class AlienInvasion():
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
-        elif event.key == pygame.K_Q:
+        elif event.key == pygame.K_q:
             sys.exit()
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
 
     def _check_keyup_events(self, event):
         """响应松开"""
@@ -77,8 +84,32 @@ class AlienInvasion():
         # 调用 Ship 类的 blitme 方法，每次被调用时绘制飞船
         self.ship.blitme()
 
+        # 绘制子弹
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+
         # 让最近绘制的屏幕可见，在 while 循环的作用下，屏幕会一直刷新
         pygame.display.flip()
+
+    def _fire_bullet(self):
+        """创建一颗子弹，并将其加入编组 bullets 中"""
+
+        if len(self.bullets) < self.settings.bullets_allowed:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
+
+    def _update_bullets(self):
+        """对子弹进行刷新，并删除消失的子弹"""
+
+        # 更新子弹的位置
+        self.bullets.update()
+
+        # 删除消失的子弹
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+        # print(len(self.bullets))
+        
 
 if __name__ == '__main__':
     # 创建游戏实例并运行游戏
