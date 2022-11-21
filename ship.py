@@ -8,11 +8,11 @@ class Ship:
     def __init__(self, ai_game):
         """初始化飞船并设置其初始位置"""
         
+        # ai_game 的参数名含义是此处用于传入 AlienInvasion 类
         # 使 Ship 类也能访问 Settings 类中的配置
         self.settings = ai_game.settings
 
-        # ai_game 的参数名含义是此处用于传入 AlienInvasion 类
-        # 将 AlienInvasion 类的 screen 属性赋给了 Ship 类的 screen 属性
+        # 将 AlienInvasion 类的 screen 对象赋给了 Ship 类的 screen 属性
         # 即让 Ship 的 screen 属性指向了 pygame 绘制出的屏幕对象
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
@@ -28,6 +28,7 @@ class Ship:
         # rect 的 x 属性不支持小数，此处将其转化为小数
         self.x = float(self.rect.x)
 
+        # 初始属性为 False，按键触发后变更为 True，实现移动
         self.moving_right = False
         self.moving_left = False
 

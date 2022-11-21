@@ -9,16 +9,23 @@ class Bullet(Sprite):
     def __init__(self, ai_game):
         """在飞船当前位置创建一个子弹对象"""
 
+        # 继承 Sprite 类
         super().__init__()
+        
+        # 指向 AlienInvasion 的 screen 对象
         self.screen = ai_game.screen
+
+        # 实现对 Settings 的访问
         self.settings = ai_game.settings
         self.color = ai_game.settings.bullet_color
 
-        # 在（0, 0）处创建一个表示子弹的矩形，再设置正确的位置
+        # 在（0, 0）处创建一个表示子弹的矩形
         self.rect = pygame.Rect(0, 0, self.settings.bullet_width, self.settings.bullet_height)
+
+        # 再设置子弹的正确位置，即飞船中间顶部
         self.rect.midtop = ai_game.ship.rect.midtop
 
-        # 存储用小数表示的子单位置
+        # 存储用小数表示的子弹位置
         self.y = float(self.rect.y)
 
     def update(self):
