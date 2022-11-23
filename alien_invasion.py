@@ -5,6 +5,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 
 # 此为游戏主程序，主要功能包括：
@@ -42,6 +43,11 @@ class AlienInvasion():
         
         # 创建一个存储子弹的编组
         self.bullets = pygame.sprite.Group()
+
+        # 创建一个外星人的编组
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
 
     # part1: 游戏主循环
 
@@ -122,7 +128,17 @@ class AlienInvasion():
                 self.bullets.remove(bullet)
         # print(len(self.bullets))
 
-    # part4: 屏幕绘制
+    # part4: 管理外星人
+
+    def _create_fleet(self):
+        """创建外星人舰队"""
+
+        # 创建一个外星人实例并加入外星人编组
+        alien = Alien(self)
+        self.aliens.add(alien)
+
+
+    # part5: 屏幕绘制
 
     def _update_screen(self):
         """绘制屏幕"""
@@ -133,9 +149,12 @@ class AlienInvasion():
         # 调用 Ship 类的 blitme 方法，绘制飞船
         self.ship.blitme()
 
-        # 调研 Bullet 的 draw_bullet 方法，对还在编组中的每个子弹进行绘制
+        # 调用 Bullet 的 draw_bullet 方法，对还在编组中的每个子弹进行绘制
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        
+        # 调用 pygame 编组的自带方法来绘制外星人
+        self.aliens.draw(self.screen)
 
         # 让最近绘制的屏幕可见，在 while 循环的作用下，屏幕会一直刷新
         pygame.display.flip()
