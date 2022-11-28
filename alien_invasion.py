@@ -130,13 +130,38 @@ class AlienInvasion():
 
     # part4: 管理外星人
 
-    def _create_fleet(self):
-        """创建外星人舰队"""
-
-        # 创建一个外星人实例并加入外星人编组
+    def _create_alien(self, alien_number, row_number):
+        """创建一个外星人并将其放置某一行的某个位置"""
         alien = Alien(self)
+        alien_width = alien.rect.width
+        # alien.x = alien_width + 2 * alien_width * alien_number
+        # alien.rect.x = alien.x
+        alien.rect.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+    def _create_fleet(self):
+        """创建外星人舰队"""
+        
+        # 两个外星人之间的距离等于一个外星人的宽度
+        # 创建一个外星人实例，仅用于提取外星人宽度
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+
+        # 计算屏幕中一行能放几个外星人，先减去两边的 margin
+        avaliable_space_x = self.settings.screen_width - (2 * alien_width)
+        number_alien_x = avaliable_space_x // (2 * alien_width)
+
+        # 计算大概能放几行外星人（要预留一些Y轴空间作为飞船空间）
+        ship_height = self.ship.rect.height
+        avaliable_space_y = (self.settings.screen_height - 
+                                (3 * alien_height) - ship_height)
+        number_rows = avaliable_space_y // (2 * alien_height)
+
+        # 通过计算得出的一行数量，创建多个外星人实例并加入外星人编组
+        for row_number in range(number_rows):
+            for alien_number in range(number_alien_x):
+                self._create_alien(alien_number, row_number)
 
     # part5: 屏幕绘制
 
