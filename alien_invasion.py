@@ -59,6 +59,7 @@ class AlienInvasion():
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
 
     # part2: 按键监听与响应
@@ -134,9 +135,9 @@ class AlienInvasion():
         """创建一个外星人并将其放置某一行的某个位置"""
         alien = Alien(self)
         alien_width = alien.rect.width
-        # alien.x = alien_width + 2 * alien_width * alien_number
-        # alien.rect.x = alien.x
-        alien.rect.x = alien_width + 2 * alien_width * alien_number
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        # alien.rect.x = alien_width + 2 * alien_width * alien_number
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
@@ -162,6 +163,13 @@ class AlienInvasion():
         for row_number in range(number_rows):
             for alien_number in range(number_alien_x):
                 self._create_alien(alien_number, row_number)
+
+    def _update_aliens(self):
+        """更新舰队所有外星人的位置"""
+
+        # 用 aliens 而不是 alien
+        # 是因为要通过群组对象，一次性调用其中所有外星人实例的 update 方法
+        self.aliens.update()
 
     # part5: 屏幕绘制
 
