@@ -22,4 +22,10 @@ class Settings:
         self.bullets_allowed = 3
 
         # 外星人设置
-        self.alien_speed = 1.0
+        # 横向移动的速度
+        self.alien_speed = 0.1
+        # 纵向移动的速度
+        self.fleet_drop_speed = 10
+        # 1 代表舰队想右移动，-1 代表向左
+        # 会通过类方法来控制舰队方便的变化
+        self.fleet_direction = 1

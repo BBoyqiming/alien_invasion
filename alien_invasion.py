@@ -164,9 +164,31 @@ class AlienInvasion():
             for alien_number in range(number_alien_x):
                 self._create_alien(alien_number, row_number)
 
-    def _update_aliens(self):
-        """更新舰队所有外星人的位置"""
+    def _check_fleet_edges(self):
+        """
+        判断舰队内是否有任何一个外星人碰到屏幕边缘
+        如果有的话，就调用让整个舰队下移的方法
+        """
 
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """调用该方法时，让整个舰队往下移动"""
+        
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
+    def _update_aliens(self):
+        """
+        1. 判断舰队是否触达屏幕边缘
+        2. 更新舰队所有外星人的位置
+        """
+
+        self._check_fleet_edges()
         # 用 aliens 而不是 alien
         # 是因为要通过群组对象，一次性调用其中所有外星人实例的 update 方法
         self.aliens.update()
