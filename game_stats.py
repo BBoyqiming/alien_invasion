@@ -12,9 +12,9 @@ class GameStats:
         # 每次初始化时，调用方法清空统计表
         self.reset_stats()
 
-        # 启动游戏时，游戏状态是 True，可运行
-        # 游戏中通过主引擎更改状态为 False，此时游戏停止运行
-        self.game_active = True
+        # 启动游戏时，游戏状态是 False，游戏不运行
+        # 游戏中通过主引擎更改状态为 True，此时游戏运行
+        self.game_active = False
 
     def reset_stats(self):
         """重置飞船生命值"""

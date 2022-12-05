@@ -10,6 +10,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
+from button import Button
 
 
 # 此为游戏主程序，主要功能包括：
@@ -58,6 +59,9 @@ class AlienInvasion():
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
 
+        # 创建开始按钮
+        self.play_button = Button(self, 'Play!')
+
     # part1: 游戏主循环
 
     def run_game(self):
@@ -92,6 +96,9 @@ class AlienInvasion():
             # 监听松开按键
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
 
     def _check_keydown_events(self, event):
         """响应按键"""
@@ -118,6 +125,28 @@ class AlienInvasion():
         # 松左键，变更 Ship 属性值，使其停止左移
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
+
+    def _check_play_button(self, mouse_pos):
+        """单击开始按钮时启动游戏"""
+
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        # 游戏处于激活状态时，点击按钮所在区域不会有反应
+        if button_clicked and not self.stats.game_active:
+
+            # 隐藏鼠标
+            pygame.mouse.set_visible(False)
+
+            # 重置数据统计信息
+            self.stats.reset_stats()
+            self.stats.game_active = True
+
+            # 清空外星人和子弹
+            self.aliens.empty()
+            self.bullets.empty()
+
+            # 创建新的外星人，并让飞船居中
+            self._create_fleet()
+            self.ship.center_ship()
 
     # part3: 子弹处理
 
@@ -274,6 +303,7 @@ class AlienInvasion():
         # 若飞船生命值未归零，更改游戏激活状态
         else:
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 
     # part6: 屏幕绘制
 
@@ -292,6 +322,10 @@ class AlienInvasion():
         
         # 调用 pygame 编组的自带方法来绘制外星人
         self.aliens.draw(self.screen)
+
+        # 在游戏未激活时，将按钮绘制在屏幕上
+        if not self.stats.game_active:
+            self.play_button.draw_button()
 
         # 让最近绘制的屏幕可见，在 while 循环的作用下，屏幕会一直刷新
         pygame.display.flip()
