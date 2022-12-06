@@ -133,6 +133,9 @@ class AlienInvasion():
         # 游戏处于激活状态时，点击按钮所在区域不会有反应
         if button_clicked and not self.stats.game_active:
 
+            # 重置游戏配置
+            self.settings.initialize_dynamic_settings()
+
             # 隐藏鼠标
             pygame.mouse.set_visible(False)
 
@@ -191,9 +194,10 @@ class AlienInvasion():
 
         # 理论上这个判断可以放在外部，放在这里出于逻辑顺畅：相撞 --> 判断是否清空
         if not self.aliens:
-            # 当最后一个外星人被摧毁，就清空子弹并创建新的舰队
+            # 当最后一个外星人被摧毁，就清空子弹并创建新的舰队，并使游戏加速
             self.bullets.empty()
             self._create_fleet()
+            self.settings.increase_speed()
 
     # part4: 管理外星人
 
