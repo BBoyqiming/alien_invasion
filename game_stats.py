@@ -17,7 +17,9 @@ class GameStats:
         self.game_active = False
 
     def reset_stats(self):
-        """重置飞船生命值"""
+        """重置飞船生命值和游戏分数"""
 
         # 将飞船剩余生命值重置为配置中的飞船生命值
         self.ships_left = self.settings.ship_limit
+
+        self.score = 0

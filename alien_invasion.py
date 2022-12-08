@@ -10,6 +10,7 @@ from ship import Ship
 from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 
 
@@ -42,9 +43,10 @@ class AlienInvasion():
         # self.settings.screen_height = self.screen.get_rect().height
 
         pygame.display.set_caption("Alien Invasion")
-
-        # 创建一个数据统计对象
+        
+        # 创建一个数据统计对象和一个记分牌对象
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
 
         # 此处的 self 表示将 AlienInvasion 传入 Ship 中
         # 让 Ship 能够访问 AlienInvasion 类的属性、方法
@@ -142,6 +144,7 @@ class AlienInvasion():
             # 重置数据统计信息
             self.stats.reset_stats()
             self.stats.game_active = True
+            self.sb.prep_score()
 
             # 清空外星人和子弹
             self.aliens.empty()
@@ -191,6 +194,13 @@ class AlienInvasion():
         # 检查是否有任一子弹击中外星人，如是则消除子弹和外星人
         collisions = pygame.sprite.groupcollide(
                     self.bullets, self.aliens, True, True)
+
+        # 击中外星人时更新得分信息
+        if collisions:
+            for aliens in collisions.values():
+                # 确保：得分 = 击毁飞船数 * 分值
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
 
         # 理论上这个判断可以放在外部，放在这里出于逻辑顺畅：相撞 --> 判断是否清空
         if not self.aliens:
@@ -282,7 +292,7 @@ class AlienInvasion():
                 self._ship_hit()
                 break
 
-    # part5: 飞船生命值
+    # part5: 飞船撞毁
 
     def _ship_hit(self):
         """响应飞船撞毁事件"""
@@ -304,7 +314,7 @@ class AlienInvasion():
             # 暂停一会
             sleep(0.5)
 
-        # 若飞船生命值未归零，更改游戏激活状态
+        # 若飞船生命值归零，更改游戏激活状态
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
@@ -326,6 +336,9 @@ class AlienInvasion():
         
         # 调用 pygame 编组的自带方法来绘制外星人
         self.aliens.draw(self.screen)
+
+        # 绘制记分牌
+        self.sb.show_score()
 
         # 在游戏未激活时，将按钮绘制在屏幕上
         if not self.stats.game_active:
