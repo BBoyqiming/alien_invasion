@@ -144,7 +144,9 @@ class AlienInvasion():
             # 重置数据统计信息
             self.stats.reset_stats()
             self.stats.game_active = True
-            self.sb.prep_score()
+            self.sb.prep_score()   
+            self.sb.prep_level()  
+            self.sb.prep_ships()       
 
             # 清空外星人和子弹
             self.aliens.empty()
@@ -201,6 +203,7 @@ class AlienInvasion():
                 # 确保：得分 = 击毁飞船数 * 分值
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
+            self.sb.check_high_score()
 
         # 理论上这个判断可以放在外部，放在这里出于逻辑顺畅：相撞 --> 判断是否清空
         if not self.aliens:
@@ -208,6 +211,10 @@ class AlienInvasion():
             self.bullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
+
+            # 游戏关卡增加
+            self.stats.level += 1
+            self.sb.prep_level()
 
     # part4: 管理外星人
 
@@ -301,6 +308,7 @@ class AlienInvasion():
         if self.stats.ships_left > 0:
             # 减少飞船生命值
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
 
             # 撞毁时，清空所有外星人和子弹
             self.aliens.empty()

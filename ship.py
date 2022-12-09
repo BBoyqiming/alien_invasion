@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import pygame
+from pygame.sprite import Sprite
 
-class Ship:
+class Ship(Sprite):
     """管理飞船的类"""
 
     def __init__(self, ai_game):
         """初始化飞船并设置其初始位置"""
+
+        super().__init__()
         
         # ai_game 参数的作用是传入 AlienInvasion 类
         # 使 Ship 类也能访问 Settings 类中的配置

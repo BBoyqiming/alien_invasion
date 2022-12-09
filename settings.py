@@ -24,10 +24,10 @@ class Settings:
         self.bullets_allowed = 3
 
         # 外星人下降速度设置
-        self.fleet_drop_speed = 30
+        self.fleet_drop_speed = 10
 
         # 游戏加速倍率设置
-        self.speedup_scale = 2
+        self.speedup_scale = 1.3
 
         # 得分倍率设置
         self.score_scale = 1.5

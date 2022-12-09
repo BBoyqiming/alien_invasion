@@ -8,6 +8,12 @@ class GameStats:
 
         # 让 GameStats 类能访问游戏的资源，如 settings
         self.settings = ai_game.settings
+
+        # 配置最高分（不会被重置）
+        self.high_score = 0
+
+        # 配置游戏关卡
+        self.level = 1
         
         # 每次初始化时，调用方法清空统计表
         self.reset_stats()
